@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BigQuery Release Notes</title>
+  <meta name="description" content="Stay up to date with the latest Google BigQuery release notes. Browse updates and share them on X (Twitter) instantly." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & Tokens ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-base:       #080c14;
+      --bg-surface:    #0d1220;
+      --bg-card:       #111827;
+      --bg-card-hover: #151e30;
+      --border:        rgba(99, 179, 237, 0.12);
+      --border-hover:  rgba(99, 179, 237, 0.35);
+      --accent-blue:   #4fa8ff;
+      --accent-cyan:   #38bdf8;
+      --accent-green:  #34d399;
+      --accent-purple: #a78bfa;
+      --accent-tweet:  #1d9bf0;
+      --text-primary:  #f0f6ff;
+      --text-secondary:#94a3b8;
+      --text-muted:    #4b5e7a;
+      --glow-blue:     rgba(79, 168, 255, 0.18);
+      --glow-tweet:    rgba(29, 155, 240, 0.25);
+      --radius-card:   16px;
+      --radius-btn:    10px;
+      --transition:    0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── Ambient background orbs ────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -20vh;
+      left: -10vw;
+      width: 60vw;
+      height: 60vh;
+      background: radial-gradient(ellipse at center, rgba(79,168,255,0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -20vh;
+      right: -10vw;
+      width: 50vw;
+      height: 50vh;
+      background: radial-gradient(ellipse at center, rgba(167,139,250,0.07) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Layout wrapper ─────────────────────────────────────────── */
+    .app-wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+    }
+
+    /* ── Header ─────────────────────────────────────────────────── */
+    header {
+      padding: 52px 0 36px;
+      text-align: center;
+    }
+
+    .logo-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .logo-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #1a6fff 0%, #0d3fa0 100%);
+      box-shadow: 0 0 24px rgba(79,168,255,0.4), 0 4px 16px rgba(0,0,0,0.4);
+      flex-shrink: 0;
+    }
+
+    .logo-badge svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    h1 {
+      font-size: clamp(1.7rem, 4vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #f0f6ff 0%, var(--accent-blue) 60%, var(--accent-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      font-weight: 400;
+      margin-top: 6px;
+    }
+
+    /* ── Controls bar ───────────────────────────────────────────── */
+    .controls-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 28px;
+      padding: 16px 20px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      backdrop-filter: blur(8px);
+    }
+
+    .meta-info {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .meta-info span.count {
+      color: var(--accent-blue);
+      font-weight: 600;
+    }
+
+    /* ── Refresh button ─────────────────────────────────────────── */
+    #refreshBtn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(135deg, #1a6fff 0%, #0d4fcc 100%);
+      border: none;
+      border-radius: var(--radius-btn);
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(79,168,255,0.3), 0 4px 12px rgba(0,0,0,0.3);
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #refreshBtn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 100%);
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    #refreshBtn:hover:not(:disabled)::before { opacity: 1; }
+    #refreshBtn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 0 28px rgba(79,168,255,0.45), 0 8px 20px rgba(0,0,0,0.35);
+    }
+    #refreshBtn:active:not(:disabled) { transform: translateY(0); }
+    #refreshBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* Spinner inside refresh button */
+    .spinner-icon {
+      width: 15px;
+      height: 15px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      display: none;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+    .loading .spinner-icon { display: block; }
+    .loading .refresh-icon { display: none; }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ── Filter tabs ────────────────────────────────────────────── */
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .filter-chip {
+      padding: 5px 14px;
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .filter-chip:hover,
+    .filter-chip.active {
+      color: var(--accent-blue);
+      border-color: var(--accent-blue);
+      background: rgba(79,168,255,0.1);
+    }
+
+    /* ── Error banner ───────────────────────────────────────────── */
+    #errorBanner {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 12px;
+      color: #fca5a5;
+      font-size: 0.88rem;
+      margin-bottom: 24px;
+    }
+    #errorBanner.visible { display: flex; }
+
+    /* ── Skeleton loader ────────────────────────────────────────── */
+    #skeletonList { display: none; flex-direction: column; gap: 16px; }
+    #skeletonList.visible { display: flex; }
+
+    .skeleton-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 26px 28px;
+    }
+
+    .skeleton-line {
+      background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.09) 50%, rgba(255,255,255,0.04) 75%);
+      background-size: 200% 100%;
+      border-radius: 6px;
+      animation: shimmer 1.4s infinite;
+    }
+    .sk-title  { height: 18px; width: 55%; margin-bottom: 12px; }
+    .sk-date   { height: 12px; width: 22%; margin-bottom: 18px; }
+    .sk-body1  { height: 12px; width: 100%; margin-bottom: 8px; }
+    .sk-body2  { height: 12px; width: 88%; margin-bottom: 8px; }
+    .sk-body3  { height: 12px; width: 70%; }
+
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ── Release notes list ─────────────────────────────────────── */
+    #notesList { display: flex; flex-direction: column; gap: 16px; }
+
+    /* ── Card ───────────────────────────────────────────────────── */
+    .note-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 26px 28px;
+      transition: all var(--transition);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .note-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan), var(--accent-purple));
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .note-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 30px var(--glow-blue);
+    }
+
+    .note-card:hover::before { opacity: 1; }
+
+    .note-card.selected {
+      border-color: var(--accent-blue);
+      background: var(--bg-card-hover);
+      box-shadow: 0 0 0 2px rgba(79,168,255,0.25), 0 12px 40px rgba(0,0,0,0.4);
+    }
+    .note-card.selected::before { opacity: 1; }
+
+    /* Card header */
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .card-title-group { flex: 1; min-width: 0; }
+
+    .card-date {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 8px;
+    }
+
+    .card-date svg { opacity: 0.8; }
+
+    .card-title {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    /* Badge */
+    .card-badge {
+      flex-shrink: 0;
+      padding: 3px 10px;
+      border-radius: 99px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .badge-new        { background: rgba(52,211,153,0.12); color: var(--accent-green); border: 1px solid rgba(52,211,153,0.25); }
+    .badge-changed    { background: rgba(79,168,255,0.12); color: var(--accent-blue);  border: 1px solid rgba(79,168,255,0.25); }
+    .badge-deprecated { background: rgba(251,191,36,0.12); color: #fbbf24;             border: 1px solid rgba(251,191,36,0.25); }
+    .badge-fixed      { background: rgba(167,139,250,0.12); color: var(--accent-purple); border: 1px solid rgba(167,139,250,0.25); }
+    .badge-update     { background: rgba(99,179,237,0.1); color: #7dd3fc;              border: 1px solid rgba(99,179,237,0.2); }
+
+    /* Card body */
+    .card-body {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-height: 120px;
+      overflow: hidden;
+      position: relative;
+      transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .card-body.expanded { max-height: 2000px; }
+
+    .card-body::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 48px;
+      background: linear-gradient(to bottom, transparent, var(--bg-card));
+      pointer-events: none;
+      transition: opacity var(--transition);
+    }
+    .card-body.expanded::after { opacity: 0; }
+    .note-card:hover .card-body::after { background: linear-gradient(to bottom, transparent, var(--bg-card-hover)); }
+
+    /* Card body HTML styling */
+    .card-body a        { color: var(--accent-blue); text-decoration: none; }
+    .card-body a:hover  { text-decoration: underline; }
+    .card-body code     { background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-size: 0.8em; font-family: 'Courier New', monospace; }
+    .card-body ul,
+    .card-body ol       { padding-left: 20px; margin: 8px 0; }
+    .card-body li       { margin-bottom: 4px; }
+    .card-body p        { margin-bottom: 8px; }
+    .card-body strong   { color: var(--text-primary); font-weight: 600; }
+
+    /* Card footer */
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-expand {
+      background: none;
+      border: none;
+      color: var(--accent-blue);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0;
+      transition: opacity var(--transition);
+    }
+    .btn-expand:hover { opacity: 0.75; }
+    .btn-expand svg   { transition: transform var(--transition); }
+    .btn-expand.expanded svg { transform: rotate(180deg); }
+
+    .card-actions { display: flex; gap: 8px; }
+
+    .btn-source {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all var(--transition);
+    }
+    .btn-source:hover {
+      color: var(--text-primary);
+      border-color: rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.09);
+    }
+
+    .btn-tweet {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 16px;
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(135deg, #1d9bf0 0%, #1578c2 100%);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all var(--transition);
+      box-shadow: 0 0 16px var(--glow-tweet);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-tweet::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.1);
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .btn-tweet:hover::before { opacity: 1; }
+    .btn-tweet:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 24px rgba(29,155,240,0.45), 0 6px 16px rgba(0,0,0,0.3);
+    }
+    .btn-tweet:active { transform: translateY(0); }
+
+    /* ── Tweet modal ────────────────────────────────────────────── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.25s ease;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-hover);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 560px;
+      padding: 32px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6), 0 0 40px var(--glow-tweet);
+      transform: translateY(24px) scale(0.97);
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .modal-overlay.open .modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .modal-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .modal-title-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg,#1d9bf0,#1578c2);
+      border-radius: 10px;
+      box-shadow: 0 0 14px var(--glow-tweet);
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 6px;
+      transition: color var(--transition);
+      line-height: 1;
+    }
+    .modal-close:hover { color: var(--text-primary); }
+
+    .tweet-textarea {
+      width: 100%;
+      min-height: 130px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      padding: 14px 16px;
+      resize: vertical;
+      transition: border-color var(--transition);
+      outline: none;
+    }
+    .tweet-textarea:focus { border-color: var(--accent-tweet); }
+
+    .tweet-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 14px;
+      gap: 12px;
+    }
+
+    .char-counter {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      transition: color var(--transition);
+    }
+    .char-counter.warn  { color: #fbbf24; }
+    .char-counter.over  { color: #f87171; }
+
+    .modal-actions { display: flex; gap: 10px; }
+
+    .btn-cancel {
+      padding: 9px 20px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .btn-cancel:hover {
+      color: var(--text-primary);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .btn-tweet-send {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 22px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(135deg,#1d9bf0,#1578c2);
+      border: none;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all var(--transition);
+      box-shadow: 0 0 18px var(--glow-tweet);
+    }
+    .btn-tweet-send:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 26px rgba(29,155,240,0.5);
+    }
+    .btn-tweet-send:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* ── Empty state ────────────────────────────────────────────── */
+    #emptyState {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 20px;
+      text-align: center;
+      color: var(--text-muted);
+      gap: 16px;
+    }
+    #emptyState.visible { display: flex; }
+    #emptyState svg { opacity: 0.3; }
+    #emptyState p { font-size: 0.95rem; }
+
+    /* ── Footer ─────────────────────────────────────────────────── */
+    .page-footer {
+      text-align: center;
+      padding: 32px 0 0;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      margin-top: 48px;
+    }
+    .page-footer a { color: var(--accent-blue); text-decoration: none; }
+
+    /* ── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      header { padding: 36px 0 24px; }
+      .note-card { padding: 20px 18px; }
+      .controls-bar { padding: 12px 16px; }
+      .modal { padding: 24px 20px; }
+      .card-footer { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+
+  <!-- ── Header ──────────────────────────────────────────── -->
+  <header>
+    <div class="logo-row">
+      <div class="logo-badge">
+        <!-- BigQuery-style icon -->
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 8C6 6.9 6.9 6 8 6h10l8 8v10c0 1.1-.9 2-2 2H8c-1.1 0-2-.9-2-2V8z" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+          <path d="M18 6l8 8h-6c-1.1 0-2-.9-2-2V6z" fill="rgba(255,255,255,0.3)"/>
+          <circle cx="13" cy="19" r="3.5" stroke="#60c8ff" stroke-width="1.8" fill="none"/>
+          <path d="M15.5 21.5L18 24" stroke="#60c8ff" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h1>BigQuery Release Notes</h1>
+    </div>
+    <p class="subtitle">Live feed from Google Cloud · Stay ahead of every update</p>
+  </header>
+
+  <!-- ── Controls bar ─────────────────────────────────────── -->
+  <div class="controls-bar">
+    <p class="meta-info" id="metaInfo">Loading release notes…</p>
+    <button id="refreshBtn" onclick="fetchNotes()">
+      <div class="spinner-icon"></div>
+      <svg class="refresh-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+        <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+      </svg>
+      Refresh
+    </button>
+  </div>
+
+  <!-- ── Filter chips ─────────────────────────────────────── -->
+  <div class="filter-row" id="filterRow" style="display:none;">
+    <button class="filter-chip active" data-filter="all" onclick="applyFilter(this)">All</button>
+    <button class="filter-chip" data-filter="new"        onclick="applyFilter(this)">New feature</button>
+    <button class="filter-chip" data-filter="changed"    onclick="applyFilter(this)">Changed</button>
+    <button class="filter-chip" data-filter="fixed"      onclick="applyFilter(this)">Fixed</button>
+    <button class="filter-chip" data-filter="deprecated" onclick="applyFilter(this)">Deprecated</button>
+  </div>
+
+  <!-- ── Error banner ─────────────────────────────────────── -->
+  <div id="errorBanner">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <span id="errorMsg">Unable to fetch release notes. Please try again.</span>
+  </div>
+
+  <!-- ── Skeleton loaders ─────────────────────────────────── -->
+  <div id="skeletonList">
+    <div class="skeleton-card">
+      <div class="skeleton-line sk-title"></div>
+      <div class="skeleton-line sk-date"></div>
+      <div class="skeleton-line sk-body1"></div>
+      <div class="skeleton-line sk-body2"></div>
+      <div class="skeleton-line sk-body3"></div>
+    </div>
+    <div class="skeleton-card">
+      <div class="skeleton-line sk-title" style="width:45%"></div>
+      <div class="skeleton-line sk-date" style="width:18%"></div>
+      <div class="skeleton-line sk-body1"></div>
+      <div class="skeleton-line sk-body2" style="width:75%"></div>
+      <div class="skeleton-line sk-body3" style="width:60%"></div>
+    </div>
+    <div class="skeleton-card">
+      <div class="skeleton-line sk-title" style="width:62%"></div>
+      <div class="skeleton-line sk-date"></div>
+      <div class="skeleton-line sk-body1"></div>
+      <div class="skeleton-line sk-body2"></div>
+    </div>
+  </div>
+
+  <!-- ── Release notes list ───────────────────────────────── -->
+  <div id="notesList"></div>
+
+  <!-- ── Empty state ─────────────────────────────────────── -->
+  <div id="emptyState">
+    <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <p>No matching release notes found.</p>
+  </div>
+
+  <!-- ── Footer ──────────────────────────────────────────── -->
+  <footer class="page-footer">
+    <p>Data sourced from <a href="https://docs.cloud.google.com/feeds/bigquery-release-notes.xml" target="_blank" rel="noopener">Google Cloud BigQuery Release Notes</a></p>
+  </footer>
+
+</div>
+
+<!-- ── Tweet modal ─────────────────────────────────────────── -->
+<div class="modal-overlay" id="tweetModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">
+        <div class="modal-title-icon">
+          <!-- X / Twitter icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+        </div>
+        <span id="modalTitle">Share on X (Twitter)</span>
+      </div>
+      <button class="modal-close" onclick="closeTweetModal()" aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <textarea
+      id="tweetText"
+      class="tweet-textarea"
+      maxlength="300"
+      placeholder="Compose your tweet…"
+      oninput="updateCharCount()"
+      spellcheck="true"
+    ></textarea>
+
+    <div class="tweet-footer">
+      <span class="char-counter" id="charCounter">280 left</span>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeTweetModal()">Cancel</button>
+        <button class="btn-tweet-send" id="tweetSendBtn" onclick="openTwitter()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+          Post Tweet
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ────────────────────────────────────────────────────────
+     State
+  ──────────────────────────────────────────────────────── */
+  let allEntries    = [];
+  let activeFilter  = 'all';
+  const MAX_TWEET   = 280;
+
+  /* ────────────────────────────────────────────────────────
+     Fetch release notes
+  ──────────────────────────────────────────────────────── */
+  async function fetchNotes() {
+    setLoading(true);
+    hideError();
+
+    try {
+      const res  = await fetch('/api/release-notes');
+      const data = await res.json();
+
+      if (!data.success) throw new Error(data.error || 'Unknown error');
+
+      allEntries = data.entries;
+      renderNotes(allEntries);
+      document.getElementById('filterRow').style.display = 'flex';
+
+      const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      document.getElementById('metaInfo').innerHTML =
+        `<span class="count">${data.count}</span> release notes · updated at ${now}`;
+
+    } catch (err) {
+      showError(err.message || 'Failed to fetch release notes.');
+      document.getElementById('metaInfo').textContent = 'Failed to load data.';
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  /* ────────────────────────────────────────────────────────
+     Render helpers
+  ──────────────────────────────────────────────────────── */
+  function renderNotes(entries) {
+    const list = document.getElementById('notesList');
+    list.innerHTML = '';
+
+    const empty = document.getElementById('emptyState');
+
+    if (!entries.length) {
+      empty.classList.add('visible');
+      return;
+    }
+    empty.classList.remove('visible');
+
+    entries.forEach((entry, idx) => {
+      const card = buildCard(entry, idx);
+      list.appendChild(card);
+    });
+  }
+
+  function buildCard(entry, idx) {
+    const card = document.createElement('article');
+    card.className = 'note-card';
+    card.id = `card-${idx}`;
+    card.setAttribute('role', 'listitem');
+
+    const badge = detectBadge(entry.title + ' ' + entry.summary_plain);
+
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="card-date">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            ${escapeHtml(entry.published)}
+          </div>
+          <h2 class="card-title">${escapeHtml(entry.title)}</h2>
+        </div>
+        <span class="card-badge ${badge.cls}">${badge.label}</span>
+      </div>
+
+      <div class="card-body" id="body-${idx}">
+        ${entry.summary_html || '<p>No summary available.</p>'}
+      </div>
+
+      <div class="card-footer">
+        <button class="btn-expand" id="expand-${idx}" onclick="toggleExpand(${idx})" aria-expanded="false">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+          Read more
+        </button>
+        <div class="card-actions">
+          <a class="btn-source" href="${escapeHtml(entry.link)}" target="_blank" rel="noopener" title="Open source">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+              <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+              <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+            Source
+          </a>
+          <button class="btn-tweet" onclick="openTweetModal(${idx})" title="Tweet this update">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="white">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+            Tweet
+          </button>
+        </div>
+      </div>
+    `;
+
+    return card;
+  }
+
+  /* ────────────────────────────────────────────────────────
+     Badge detection
+  ──────────────────────────────────────────────────────── */
+  function detectBadge(text) {
+    const t = text.toLowerCase();
+    if (/\bnew feature\b|\bnew release\b/.test(t))    return { cls: 'badge-new',        label: 'New Feature' };
+    if (/\bdeprecated\b|\bdeprecation\b/.test(t))      return { cls: 'badge-deprecated',  label: 'Deprecated'  };
+    if (/\bfixed?\b|\bbug fix\b|\bpatch\b/.test(t))    return { cls: 'badge-fixed',       label: 'Fixed'       };
+    if (/\bchanged\b|\bupdate[ds]?\b|\bmodified\b/.test(t)) return { cls: 'badge-changed', label: 'Changed'    };
+    return { cls: 'badge-update', label: 'Update' };
+  }
+
+  /* ────────────────────────────────────────────────────────
+     Expand / collapse
+  ──────────────────────────────────────────────────────── */
+  function toggleExpand(idx) {
+    const body = document.getElementById(`body-${idx}`);
+    const btn  = document.getElementById(`expand-${idx}`);
+    const isExp = body.classList.toggle('expanded');
+    btn.classList.toggle('expanded', isExp);
+    btn.setAttribute('aria-expanded', isExp);
+    btn.querySelector('svg').previousSibling; // noop
+    btn.innerHTML = `
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+           style="transform:${isExp ? 'rotate(180deg)' : 'none'}; transition: transform 0.22s ease;">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+      ${isExp ? 'Show less' : 'Read more'}
+    `;
+  }
+
+  /* ────────────────────────────────────────────────────────
+     Filter chips
+  ──────────────────────────────────────────────────────── */
+  function applyFilter(chip) {
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    activeFilter = chip.dataset.filter;
+
+    if (activeFilter === 'all') {
+      renderNotes(allEntries);
+      return;
+    }
+
+    const kw = { new: 'new feature|new release', changed: 'changed|updated|modified', fixed: 'fix|fixed|patch|bug', deprecated: 'deprecated' };
+    const rx = new RegExp(kw[activeFilter] || activeFilter, 'i');
+    const filtered = allEntries.filter(e => rx.test(e.title + ' ' + e.summary_plain));
+    renderNotes(filtered);
+  }
+
+  /* ────────────────────────────────────────────────────────
+     Tweet modal
+  ──────────────────────────────────────────────────────── */
+  function openTweetModal(idx) {
+    const entry = allEntries[idx];
+    if (!entry) return;
+
+    // Compose default tweet text
+    const title   = entry.title.length > 100 ? entry.title.substring(0, 97) + '…' : entry.title;
+    const snippet = entry.summary_plain.length > 120 ? entry.summary_plain.substring(0, 117) + '…' : entry.summary_plain;
+    const tags    = '#BigQuery #GoogleCloud';
+    let draft     = `📢 ${title}\n\n${snippet}\n\n${tags}`;
+    if ((draft + '\n' + entry.link).length <= MAX_TWEET) draft += '\n' + entry.link;
+    draft = draft.substring(0, MAX_TWEET);
+
+    document.getElementById('tweetText').value = draft;
+    updateCharCount();
+    document.getElementById('tweetModal').classList.add('open');
+    setTimeout(() => document.getElementById('tweetText').focus(), 100);
+  }
+
+  function closeTweetModal() {
+    document.getElementById('tweetModal').classList.remove('open');
+  }
+
+  function openTwitter() {
+    const text = document.getElementById('tweetText').value.trim();
+    if (!text) return;
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank', 'noopener,width=600,height=500');
+    closeTweetModal();
+  }
+
+  function updateCharCount() {
+    const area    = document.getElementById('tweetText');
+    const counter = document.getElementById('charCounter');
+    const sendBtn = document.getElementById('tweetSendBtn');
+    const used    = area.value.length;
+    const left    = MAX_TWEET - used;
+
+    counter.textContent = `${left} left`;
+    counter.className   = 'char-counter' + (left < 0 ? ' over' : left < 30 ? ' warn' : '');
+    sendBtn.disabled    = used === 0 || left < 0;
+  }
+
+  // Close modal on overlay click
+  document.getElementById('tweetModal').addEventListener('click', function(e) {
+    if (e.target === this) closeTweetModal();
+  });
+
+  // Close modal on Escape key
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeTweetModal();
+  });
+
+  /* ────────────────────────────────────────────────────────
+     UI state helpers
+  ──────────────────────────────────────────────────────── */
+  function setLoading(on) {
+    const btn      = document.getElementById('refreshBtn');
+    const skeleton = document.getElementById('skeletonList');
+    const list     = document.getElementById('notesList');
+
+    btn.disabled = on;
+    btn.classList.toggle('loading', on);
+
+    if (on) {
+      skeleton.classList.add('visible');
+      list.innerHTML = '';
+      document.getElementById('emptyState').classList.remove('visible');
+    } else {
+      skeleton.classList.remove('visible');
+    }
+  }
+
+  function showError(msg) {
+    const banner = document.getElementById('errorBanner');
+    document.getElementById('errorMsg').textContent = msg;
+    banner.classList.add('visible');
+  }
+
+  function hideError() {
+    document.getElementById('errorBanner').classList.remove('visible');
+  }
+
+  function escapeHtml(str) {
+    const d = document.createElement('div');
+    d.appendChild(document.createTextNode(str || ''));
+    return d.innerHTML;
+  }
+
+  /* ────────────────────────────────────────────────────────
+     Bootstrap on load
+  ──────────────────────────────────────────────────────── */
+  fetchNotes();
+</script>
+</body>
+</html>

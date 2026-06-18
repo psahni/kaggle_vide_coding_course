@@ -1,0 +1,38 @@
+[
+  {
+    "name": "filename",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "The name of the processed file"
+  },
+  {
+    "name": "processed_at",
+    "type": "TIMESTAMP",
+    "mode": "REQUIRED",
+    "description": "Timestamp when the file was processed"
+  },
+  {
+    "name": "tags",
+    "type": "STRING",
+    "mode": "REPEATED",
+    "description": "Tags extracted from the document"
+  },
+  {
+    "name": "word_count",
+    "type": "INTEGER",
+    "mode": "REQUIRED",
+    "description": "Word count of the document content"
+  },
+  {
+    "name": "bucket",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "GCS bucket name where the file was uploaded"
+  },
+  {
+    "name": "file_size",
+    "type": "INTEGER",
+    "mode": "REQUIRED",
+    "description": "File size in bytes"
+  }
+]

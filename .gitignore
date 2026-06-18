@@ -1,0 +1,147 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.env
+.env.local
+.env.*.local
+
+# IDE and Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# ADK / Agents CLI
+.adk/
+agents-cli-manifest.yaml.bak
+uv.lock
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+terraform.lock.hcl
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+
+# OS specific
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+desktop.ini
+
+# Google Cloud
+gs://
+service-account-key.json
+*-key.json
+
+# Google ADK project artifacts
+.gemini/
+
+# Google generative AI cache
+.genai/
+
+# Gen-lang artifacts (existing pattern)
+gen-lang*.json
+
+# Claude Code artifacts
+.claude/settings.local.json
+
+# Test coverage
+.coverage
+.coverage.*
+htmlcov/
+
+# Credentials and secrets
+credentials.json
+*credentials*.json
+secrets.json
+*secret*.json
+.credentials/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+*.whl
+
+# Pytest
+.pytest_cache/
+.tox/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# MacOS
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+.VolumeIcon.icns
+.TemporaryItems
+.fseventsd
+
+# Windows
+$RECYCLE.BIN/
+ehthumbs.db
+
+# Development
+.idea/
+.vscode/settings.json
+*.iml
