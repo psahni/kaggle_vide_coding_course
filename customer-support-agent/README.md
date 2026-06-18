@@ -128,6 +128,23 @@ uv run adk web --host 127.0.0.1 --port 8080 app
 
 Then access the UI at: **`http://127.0.0.1:8080/dev-ui/?app=app`**
 
+**Test via curl**:
+```bash
+# Shipping-related query
+curl -s -X POST "http://127.0.0.1:8080/api/agents/app/run" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "content": "What are your shipping rates to California?"
+  }' | jq .
+
+# Unrelated query
+curl -s -X POST "http://127.0.0.1:8080/api/agents/app/run" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "content": "Tell me a joke"
+  }' | jq .
+```
+
 **Why the workaround is needed**:
 - `agents-cli playground` calls `adk web .` which misinterprets directory contents as arguments
 - Error: `Got unexpected extra arguments (app Dockerfile GEMINI.md ...)`
