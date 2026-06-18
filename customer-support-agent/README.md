@@ -121,29 +121,14 @@ EOF
 
 **Issue**: `agents-cli playground` has an argument parsing bug.
 
-**Workaround**:
+**Workaround** (to start the server):
 ```bash
 uv run adk web --host 127.0.0.1 --port 8080 app
 ```
 
 Then access the UI at: **`http://127.0.0.1:8080/dev-ui/?app=app`**
 
-**Test via curl**:
-```bash
-# Shipping-related query
-curl -s -X POST "http://127.0.0.1:8080/api/agents/app/run" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "content": "What are your shipping rates to California?"
-  }' | jq .
-
-# Unrelated query
-curl -s -X POST "http://127.0.0.1:8080/api/agents/app/run" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "content": "Tell me a joke"
-  }' | jq .
-```
+**Note on API testing**: The ADK-generated API endpoints are complex and require proper session management. For direct testing, use **Method 1 (Direct Python Testing)** above instead.
 
 **Why the workaround is needed**:
 - `agents-cli playground` calls `adk web .` which misinterprets directory contents as arguments
