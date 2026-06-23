@@ -1,0 +1,7 @@
+rules:
+  - id: detect-google-api-key
+    pattern-regex: AIzaSy[A-Za-z0-9_\-]*
+    message: "Security violation: A hardcoded Google API key has been detected. API keys must not be hardcoded in source code; use environment variables or a secure secret manager instead."
+    languages:
+      - python
+    severity: ERROR

@@ -1,0 +1,21 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        name: Trim trailing whitespace
+      - id: end-of-file-fixer
+        name: Fix end of file
+
+  - repo: local
+    hooks:
+      - id: semgrep
+        name: Semgrep security scan
+        description: Scans Python code for security issues and API key leaks
+        entry: semgrep
+        args:
+          - scan
+          - --config=secure-agent-lab/shopping-assistant/.semgrep/rules.yaml
+          - --error
+        types: [python]
+        language: system
