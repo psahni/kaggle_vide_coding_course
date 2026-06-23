@@ -1,4 +1,4 @@
-.PHONY: install playground ambient stop stop-ambient stop-playground
+.PHONY: install playground ambient stop stop-ambient stop-playground generate-traces grade
 
 install:
 	uv sync
@@ -16,3 +16,10 @@ stop-ambient:
 
 stop-playground:
 	powershell -Command 'Get-NetTCPConnection -LocalPort 8000 -State Listen -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess | ForEach-Object { Stop-Process -Id $$_ -Force }'
+
+# Evaluation targets
+generate-traces:
+	python -m tests.eval.generate_traces
+
+grade:
+	agents-cli eval grade --config tests/eval/eval_config.yaml --traces ../artifacts/traces/generated_traces.json
