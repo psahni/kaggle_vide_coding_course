@@ -1,0 +1,70 @@
+# Pre-commit hooks configuration for security gating
+# Runs automated checks on every commit to catch issues early
+
+repos:
+  # Basic file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        name: Trim trailing whitespace
+      - id: end-of-file-fixer
+        name: Fix end of file
+      - id: check-yaml
+        name: Check YAML files
+        args: ["--safe"]
+      - id: check-json
+        name: Check JSON files
+      - id: check-toml
+        name: Check TOML files
+      - id: check-added-large-files
+        name: Check for large files
+        args: ["--maxkb=1000"]
+      - id: detect-private-key
+        name: Detect private keys
+        description: Detects presence of private keys
+      - id: check-ast
+        name: Check Python AST
+
+  # Security scanning with Semgrep
+  - repo: https://github.com/returntocorp/semgrep
+    rev: v1.45.0
+    hooks:
+      - id: semgrep
+        name: Semgrep security scan
+        description: Scans code for security issues and best practices
+        args:
+          - --config=p/security-audit
+          - --config=p/python
+          - --config=p/api-security
+        types: [python]
+        language: python
+        entry: semgrep
+        stages: [commit]
+
+  # Python linting with Ruff
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.6
+    hooks:
+      - id: ruff
+        name: Ruff linter
+        description: Runs Ruff linter on Python files
+        args: ["--line-length=88"]
+      - id: ruff-format
+        name: Ruff format
+        description: Formats Python code with Ruff
+
+# Pre-commit settings
+default_language_version:
+  python: python3.13
+
+# Skip semgrep in CI to avoid rate limiting (optional)
+exclude: |
+  (?x)^(
+    \.venv/|
+    __pycache__/|
+    \.git/|
+    build/|
+    dist/|
+    .*\.egg-info/
+  )

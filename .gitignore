@@ -33,7 +33,7 @@ venv.bak/
 .env
 .env.local
 .env.*.local
-
+.env*
 # IDE and Editor
 .vscode/
 .idea/
@@ -145,3 +145,5 @@ ehthumbs.db
 .idea/
 .vscode/settings.json
 *.iml
+.venv/
+**/.venv/
