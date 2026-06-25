@@ -1,0 +1,84 @@
+[
+  {
+    "ticket_id": "LT-20260625-656",
+    "created_at": "2026-06-25T16:23:37.543102",
+    "requester": {
+      "name": "Bob Smith",
+      "employee_id": "EMP-002",
+      "manager": "EMP-005",
+      "designation": "Senior Engineer",
+      "department": "Engineering"
+    },
+    "request": {
+      "type": "Replacement",
+      "justification": "Current laptop is damaged",
+      "device_category": "Standard",
+      "accessories": "Mouse",
+      "location": "San Francisco",
+      "required_date": "31th May 2026"
+    },
+    "status": "completed",
+    "approved_by": "manager",
+    "audit_trail": [
+      {
+        "timestamp": "2026-06-25T16:23:37.543102",
+        "actor": "employee",
+        "action": "request_submitted",
+        "details": "User submitted the laptop request."
+      },
+      {
+        "timestamp": "2026-06-25T16:23:37.543102",
+        "actor": "agent",
+        "action": "policy_check_passed",
+        "details": "Policy check completed. Path: Manager required"
+      },
+      {
+        "timestamp": "2026-06-25T16:31:16.235487",
+        "actor": "manager",
+        "action": "manager_approved",
+        "details": "Request approved. Reason: Approved by manager in simulated environment"
+      },
+      {
+        "timestamp": "2026-06-25T16:31:16.235487",
+        "actor": "system",
+        "action": "ticket_fulfilled",
+        "details": "Ticket is ready for fulfillment."
+      }
+    ]
+  },
+  {
+    "ticket_id": "LT-20260625-353",
+    "created_at": "2026-06-25T16:33:41.785334",
+    "requester": {
+      "department": "Engineering",
+      "employee_id": "EMP-005",
+      "manager": "EMP-010",
+      "name": "Eve Adams",
+      "designation": "Engineering Manager"
+    },
+    "request": {
+      "type": "Upgrade",
+      "justification": "My laptop is old, I want to buy a new one",
+      "location": "San Francisco",
+      "device_category": "Premium",
+      "required_date": "30th June, 2026",
+      "accessories": "None"
+    },
+    "status": "approved",
+    "approved_by": null,
+    "audit_trail": [
+      {
+        "timestamp": "2026-06-25T16:33:41.785334",
+        "actor": "employee",
+        "action": "request_submitted",
+        "details": "User submitted the laptop request."
+      },
+      {
+        "timestamp": "2026-06-25T16:33:41.785334",
+        "actor": "agent",
+        "action": "policy_check_passed",
+        "details": "Policy check completed. Path: Auto-approve"
+      }
+    ]
+  }
+]

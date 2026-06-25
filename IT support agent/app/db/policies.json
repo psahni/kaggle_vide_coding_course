@@ -1,0 +1,25 @@
+{
+  "designation_entitlements": {
+    "Junior Engineer": { "entitled_device": "MacBook Air M2", "tier": "Standard", "approval_path": "Auto-approve", "upgrade_eligible": "No" },
+    "Senior Engineer": { "entitled_device": "MacBook Pro 14", "tier": "Standard", "approval_path": "Auto-approve", "upgrade_eligible": "Yes (manager)" },
+    "Engineering Manager": { "entitled_device": "MacBook Pro 16", "tier": "Premium", "approval_path": "Auto-approve", "upgrade_eligible": "Yes" },
+    "Intern": { "entitled_device": "ThinkPad E14", "tier": "Basic", "approval_path": "Manager required", "upgrade_eligible": "No" },
+    "New Hire": { "entitled_device": "MacBook Air M2", "tier": "Standard", "approval_path": "Auto-approve", "upgrade_eligible": "No" }
+  },
+  "request_type_rules": [
+    { "request_type": "New", "condition": "Standard device", "approval_path": "Auto-approve" },
+    { "request_type": "New", "condition": "Premium device", "approval_path": "Manager required" },
+    { "request_type": "Upgrade", "condition": "Standard -> Standard", "approval_path": "Auto-approve" },
+    { "request_type": "Upgrade", "condition": "Standard -> Premium", "approval_path": "Manager required" },
+    { "request_type": "Upgrade", "condition": "Premium -> Premium", "approval_path": "Manager + Finance" },
+    { "request_type": "Replacement", "condition": "Damaged / Aging", "approval_path": "Auto-approve" },
+    { "request_type": "Replacement", "condition": "Lost", "approval_path": "Manager required" },
+    { "request_type": "Replacement", "condition": "Stolen", "approval_path": "Manager + Finance" },
+    { "request_type": "New Hire", "condition": "Standard", "approval_path": "Auto-approve" },
+    { "request_type": "New Hire", "condition": "Premium", "approval_path": "Manager required" }
+  ],
+  "experience_overrides": {
+    "senior_tier_threshold": 7,
+    "premium_auto_approve_threshold": 10
+  }
+}

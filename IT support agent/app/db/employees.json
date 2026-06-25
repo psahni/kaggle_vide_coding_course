@@ -1,0 +1,46 @@
+[
+  {
+    "employee_id": "EMP-001",
+    "name": "Alice Johnson",
+    "designation": "Junior Engineer",
+    "experience": 2,
+    "department": "Engineering",
+    "manager": "EMP-005",
+    "location": "New York",
+    "cost_center": "CC-ENG-01",
+    "employment_type": "Full-time"
+  },
+  {
+    "employee_id": "EMP-002",
+    "name": "Bob Smith",
+    "designation": "Senior Engineer",
+    "experience": 8,
+    "department": "Engineering",
+    "manager": "EMP-005",
+    "location": "San Francisco",
+    "cost_center": "CC-ENG-02",
+    "employment_type": "Full-time"
+  },
+  {
+    "employee_id": "EMP-003",
+    "name": "Charlie Davis",
+    "designation": "New Hire",
+    "experience": 0,
+    "department": "Engineering",
+    "manager": "EMP-005",
+    "location": "Remote",
+    "cost_center": "CC-ENG-03",
+    "employment_type": "Full-time"
+  },
+  {
+    "employee_id": "EMP-005",
+    "name": "Eve Adams",
+    "designation": "Engineering Manager",
+    "experience": 12,
+    "department": "Engineering",
+    "manager": "EMP-010",
+    "location": "San Francisco",
+    "cost_center": "CC-ENG-00",
+    "employment_type": "Full-time"
+  }
+]
